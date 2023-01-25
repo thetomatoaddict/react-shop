@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navbar, Container, Nav, Row, Col } from 'react-bootstrap';
 import './App.css';
 import pdata from './data.js';
 import { Route, Routes, Link, useParams } from 'react-router-dom';
+import Detail from './Detail';
+import axios from 'axios';
 
 function App() {
-  let [shoes] = useState(pdata)
+  let [shoes, setShoes] = useState(pdata)
+  let [seeMore, setSeeMore] = useState(2)
+  let [loading, setloading] = useState(false)
 
   return (
-   
-
+    
     <div className="App">
       <Navbar bg="light" variant="light">
         <Container>
@@ -33,6 +36,11 @@ function App() {
       <Routes>
         <Route path='/' element={<div><>
     <div className='main-bg'></div>
+    {
+      loading == true ?
+      <div className='alert warning-alert'> Loading ...</div>
+      : null
+    }
     <div class="row p-3">
         {
         shoes.map(function(a, i){
@@ -42,8 +50,26 @@ function App() {
           
         })
       }
-
       </div>
+      
+      {
+        seeMore < 4 ?
+        <button onClick={()=>{
+          setloading(true)
+          axios.get('https://codingapple1.github.io/shop/data' + seeMore +'.json')
+          .then((pdata2)=>{
+            let copy = [...shoes, ...pdata2.data]
+            setShoes(copy)
+            setSeeMore(seeMore+1)
+            setloading(false)
+          })
+          .catch(()=>{
+            setloading(false)
+            console.log('실패함')
+          })
+        }}>더보기</button>
+        : null
+      }
       </></div>}></Route>
         <Route path='/detail/:id' element={<Detail shoes={shoes}/>}></Route>
       </Routes>
@@ -60,7 +86,7 @@ function Shoesitem(props){
   return(
     
   <div className="col-6 col-md-4">
-    <Link to="/detail" className='link'>
+    <Link to={"/detail/"+props.i} className='link'>
       <img src={'https://codingapple1.github.io/shop/shoes' + props.i + '.jpg'} className='p-img'>
       </img>
       <h4>{props.shoes.title}</h4>
@@ -71,25 +97,7 @@ function Shoesitem(props){
 
 }
 
-function Detail(props){
-  let {id} = useParams();
-  let copy = Number(id) + 1
-  return(
-    <div className="container">
-  <div className="row">
-    <div className="col-md-6">
-      <img src={"https://codingapple1.github.io/shop/shoes" + copy + ".jpg"} width="100%" />
-    </div>
-    <div className="col-md-6">
-      <h4 className="pt-5">{props.shoes[id].title}</h4>
-      <p>{props.shoes[id].content}</p>
-      <p>{props.shoes[id].price}</p>
-      <button className="btn btn-danger">주문하기</button> 
-    </div>
-  </div>
-</div>
-  )
-}
+
 
 
 export default App;
