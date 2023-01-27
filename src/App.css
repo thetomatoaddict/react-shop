@@ -18,3 +18,19 @@
 .link {
   text-decoration: none;
 }
+
+.modal {
+background-color: rgb(226, 252, 140);
+padding: 20px;
+height: 100px;
+
+}
+
+.fadeinstart{
+  opacity: 0;
+}
+
+.fadeinend{
+  opacity: 1;
+  transition: opacity 0.8s;
+}

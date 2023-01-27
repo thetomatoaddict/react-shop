@@ -9,17 +9,21 @@ function Detail(props){
     let {id} = useParams();
     let copy = Number(id) + 1
     let [alert, setalert] = useState(true)
+    let [tab, setTab] = useState(1)
+    let [fade, setfade] = useState('')
   
     useEffect(()=>{
       let a = setTimeout(()=>{setalert(false)}, 2000)
+      setfade('fadeinend')
   
       return ()=>{
-        clearTimeout(a) 
+        clearTimeout(a)
+        setfade('')
       }
     }, [])
   
     return(
-      <div className="container">
+      <div className={"container fadeinstart " + fade}>
         {
           alert == true ? 
           <div className='alert alert-warning'>
@@ -29,7 +33,7 @@ function Detail(props){
         }
     <div className="row">
       <div className="col-md-6">
-        <img src={"https://codingapple1.github.io/shop/shoes" + copy + ".jpg"} width="100%" />
+        <img src={"https://codingapple1.github.io/shop/shoes" + copy + ".jpg"} width="100%"/>
       </div>
       <div className="col-md-6">
         <h4 className="pt-5">{props.shoes[id].title}</h4>
@@ -37,9 +41,44 @@ function Detail(props){
         <p>{props.shoes[id].price}</p>
         <button className="btn btn-danger">주문하기</button> 
       </div>
+      <div>
+        <Nav fill variant="tabs"  defaultActiveKey="link0">
+          <Nav.Item>
+            <Nav.Link eventKey="link0" onClick={()=>{setTab(1)}}>탭 1</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="link1"onClick={()=>{setTab(2)}}>탭 2</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="link2"onClick={()=>{setTab(3)}}>탭 3</Nav.Link>
+          </Nav.Item>
+        </Nav>  
+      </div>
+      <Modal tab={tab}/>
+      
     </div>
   </div>
     )
   }
 
-  export default Detail
+  function Modal(props){
+    if (props.tab == 1) {
+      return <div className='pt-3'>
+          <h4>모달내용 1</h4>
+        </div>
+    }
+    if (props.tab == 2) {
+      return <div className='pt-3'>
+          <h4>모달내용 2</h4>
+        </div>
+    }
+    if (props.tab == 3) {
+      return <div className='pt-3'>
+          <h4>모달내용 3</h4>
+        </div>
+    }
+      
+    
+  }
+
+  export default Detail;
