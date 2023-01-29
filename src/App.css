@@ -34,3 +34,9 @@ height: 100px;
   opacity: 1;
   transition: opacity 0.8s;
 }
+
+.thumnail {
+  width: 60px;
+  background-size: cover;
+  background-position: center;
+}

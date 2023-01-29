@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Navbar, Container, Nav, Row, Col } from 'react-bootstrap';
-import './App.css';
-import pdata from './data.js';
-import { Route, Routes, Link, useParams } from 'react-router-dom';
+import { Nav } from 'react-bootstrap';
+import './../App.css';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addcart } from './../store.js'
 
 
 function Detail(props){
@@ -11,6 +12,7 @@ function Detail(props){
     let [alert, setalert] = useState(true)
     let [tab, setTab] = useState(1)
     let [fade, setfade] = useState('')
+    let dispatch = useDispatch()
   
     useEffect(()=>{
       let a = setTimeout(()=>{setalert(false)}, 2000)
@@ -39,10 +41,14 @@ function Detail(props){
         <h4 className="pt-5">{props.shoes[id].title}</h4>
         <p>{props.shoes[id].content}</p>
         <p>{props.shoes[id].price}</p>
-        <button className="btn btn-danger">주문하기</button> 
+        <button className="btn btn-danger" onClick={()=>{
+          let item = { id : Number(id), name : props.shoes[Number(id)].title, count : 1}
+          dispatch(addcart(item))
+          console.log(item)
+          }}>주문하기</button> 
       </div>
       <div>
-        <Nav fill variant="tabs"  defaultActiveKey="link0">
+        <Nav fill variant="tabs"  defaultActiveKey="link0" className='pt-5'>
           <Nav.Item>
             <Nav.Link eventKey="link0" onClick={()=>{setTab(1)}}>탭 1</Nav.Link>
           </Nav.Item>
@@ -54,7 +60,7 @@ function Detail(props){
           </Nav.Item>
         </Nav>  
       </div>
-      <Modal tab={tab}/>
+      <Modal tab={tab} shoes={props.shoes}/>
       
     </div>
   </div>
@@ -64,17 +70,17 @@ function Detail(props){
   function Modal(props){
     if (props.tab == 1) {
       return <div className='pt-3'>
-          <h4>모달내용 1</h4>
+          <h4>{props.shoes[0].title}</h4>
         </div>
     }
     if (props.tab == 2) {
       return <div className='pt-3'>
-          <h4>모달내용 2</h4>
+          <h4>{props.shoes[1].title}</h4>
         </div>
     }
     if (props.tab == 3) {
       return <div className='pt-3'>
-          <h4>모달내용 3</h4>
+          <h4>{props.shoes[2].title}</h4>
         </div>
     }
       
