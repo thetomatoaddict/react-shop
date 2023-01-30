@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Nav, Table, Button} from 'react-bootstrap';
-import { useSelector, useDispatch} from 'react-redux';
+import { Nav, Table, Button } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
 import './../App.css';
-import {plus, minus, del} from './../store.js'
-function Cart(){
-    let cart = useSelector((state)=>{return state.cart})
-    let user = useSelector((state)=>{return state.user})
+import { plus, minus, del } from './../store.js'
+import Shoesitem from '../ShoesItem';
+
+function Cart() {
+    let cart = useSelector((state) => { return state.cart })
+    let user = useSelector((state) => { return state.user })
     let dispatch = useDispatch()
+    let watched = localStorage.getItem('watched')
+    watched = JSON.parse(watched)
+
     return (
+        <>
         <Table>
             <thead>
                 <tr>
@@ -19,38 +25,50 @@ function Cart(){
                 </tr>
             </thead>
             <tbody>
-                    {
-                        cart.map(function(a,i){
-                            i++
-                            let id = a.id + 1
-                            return (
-                                <tr>
-                                    <td>{i}</td>
-                                    <td><img src={'https://codingapple1.github.io/shop/shoes' + id + '.jpg'} className='thumnail'/></td>
-                                    <td>{a.name}</td>
-                                    <td>{a.count}</td>
-                                    <td>
-                                    <button onClick={()=>{
-                                        if (cart[i-1].count > 0){
-                                        dispatch(minus(a.id))
+                {
+                    cart.map(function (a, i) {
+                        i++
+                        let id = a.id + 1
+                        return (
+                            <tr>
+                                <td>{i}</td>
+                                <td><img src={'https://codingapple1.github.io/shop/shoes' + id + '.jpg'} className='thumnail' /></td>
+                                <td>{a.name}</td>
+                                <td>{a.count}</td>
+                                <td>
+                                    <button onClick={() => {
+                                        if (cart[i - 1].count > 0) {
+                                            dispatch(minus(a.id))
                                         }
                                     }}>-</button><span> </span>
-                                    <button onClick={()=>{
+                                    <button onClick={() => {
                                         dispatch(plus(a.id))
                                     }}>+</button>
-                                    <button onClick={()=>{
+                                    <button onClick={() => {
                                         dispatch(del(a.id))
                                     }}>삭제</button>
-                                        </td>
-                                </tr>
-                            )
+                                </td>
+                            </tr>
+                        )
 
-                        })
-                    }
-                
+                    })
+                }
+
 
             </tbody>
-        </Table> 
+        </Table>
+        <div class="row p-3">
+            {
+              watched.map(function (a, i) {
+                return (
+                  <Shoesitem shoes={watched[i]} i={i + 1} />
+                )
+
+              })
+            }
+
+        </div>
+        </>
     )
 }
 
